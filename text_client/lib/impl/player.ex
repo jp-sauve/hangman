@@ -1,5 +1,5 @@
 defmodule TextClient.Impl.Player do
-
+  alias IO.ANSI, as: ANSI
   @typep game :: Hangman.game
   @typep tally :: Hangman.tally
   @typep state :: { game, tally }
@@ -23,6 +23,8 @@ defmodule TextClient.Impl.Player do
 
   @spec interact({game, tally}) :: :ok
   def interact({ game, tally }) do
+    # clear field
+    IO.puts([IO.ANSI.clear(), IO.ANSI.cursor(0,0)])
     # feedback
     IO.puts feedback_for(tally)
     # display current word
@@ -33,6 +35,7 @@ defmodule TextClient.Impl.Player do
     |> interact()
   end
 
+
   def feedback_for(tally = %{ game_state: :initializing }) do
     "Welcome! I'm thinking of a #{tally.letters |> length} letter word"
   end
@@ -41,13 +44,14 @@ defmodule TextClient.Impl.Player do
   def feedback_for(tally = %{ game_state: :bad_guess }), do: "Bad guess! Still #{(tally.letters |> Enum.filter(&(&1 == "_")) |> length)} letters left."
   def feedback_for(tally = %{ game_state: :already_used }), do: "C'mon, mate! You did that one already. Still #{(tally.letters |> Enum.filter(&(&1 == "_")) |> length)} letters left."
 
+
   def current_word(tally) do
     # ("Word so far: " <> (tally.letters |> Enum.join(" "))) |> IO.puts
     [
       "Word so far: ", tally.letters |> Enum.join(" "),
       "\n    turns left: ", tally.turns_left |> to_string,
       "\n    used so far: ", tally.used |> Enum.join(",")
-    ] |> IO.puts
+    ]
   end
 
   def get_guess() do

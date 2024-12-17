@@ -8,6 +8,4 @@ defmodule Hangman.Type do
     letters: list(String.t),
     used: list(String.t)
   }
-
-
 end

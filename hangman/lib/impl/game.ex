@@ -20,7 +20,7 @@ defmodule Hangman.Impl.Game do
 
   @spec init_game :: t
   def init_game do
-    init_game(Dictionary.random_word)
+    init_game(Dictionary.random_word())
   end
 
   @spec init_game(String.t) :: t
@@ -87,11 +87,12 @@ defmodule Hangman.Impl.Game do
   defp reveal_guessed_letters(game = %{ game_state: :lost}) do
     game.letters
   end
+
   defp reveal_guessed_letters(game) do
     game.letters
         |> Enum.map(&(maybe_reveal(&1, Enum.member?(game.used,&1))))
   end
-  
+
   defp maybe_reveal(letter, _letter_used = true), do: letter
   defp maybe_reveal(_letter, _), do: "_"
 
